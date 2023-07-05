@@ -127,8 +127,6 @@
 
     <q-dialog v-model="detailDialog" position="bottom">
       <q-card style="width: 700px; max-width: 80vw">
-        <q-linear-progress :value="0.5" color="green" />
-
         <q-card-section class="items-center no-wrap">
           <div>
             <div class="text-weight-bold">DETAIL DATA PENGGUNA</div>
@@ -188,7 +186,9 @@
       <q-card style="width: 900px; max-width: 80vw">
         <q-form @submit="onSubmit()" class="q-gutter-md">
           <q-card-section>
-            <div class="text-h6 text-indigo">PENDAFTARAN PENGGUNA BARU</div>
+            <div class="text-h6 text-indigo">
+              PENDAFTARAN / UBAH PENGGUNA BARU
+            </div>
             <div class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
             </div>
@@ -345,210 +345,35 @@
                   <q-icon name="account_circle" class="q-pr-md" />
                 </template>
               </q-input>
-              <div v-if="editMode">
-                <q-input
-                  :disable="true"
-                  standout="bg-positive text-white"
-                  v-model="form.PASSWORD"
-                  class="text-white col-4 q-pa-sm"
-                  label="Password"
-                  :type="isPwd ? 'password' : 'text'"
-                  dense
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="fingerprint" class="q-pr-md" />
-                  </template>
-                  <template v-slot:append>
-                    <q-icon
-                      :name="isPwd ? 'visibility_off' : 'visibility'"
-                      class="cursor-pointer"
-                      @click="isPwd = !isPwd"
-                    />
-                  </template>
-                </q-input>
-              </div>
-              <div v-else>
-                <q-input
-                  standout="bg-positive text-white"
-                  v-model="form.PASSWORD"
-                  class="text-white col-4 q-pa-sm"
-                  label="Password"
-                  :type="isPwd ? 'password' : 'text'"
-                  dense
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="fingerprint" class="q-pr-md" />
-                  </template>
-                  <template v-slot:append>
-                    <q-icon
-                      :name="isPwd ? 'visibility_off' : 'visibility'"
-                      class="cursor-pointer"
-                      @click="isPwd = !isPwd"
-                    />
-                  </template>
-                </q-input>
-              </div>
+              <q-input
+                :disable="editMode"
+                standout="bg-positive text-white"
+                v-model="form.PASSWORD"
+                class="text-white col-4 q-pa-sm"
+                label="Password"
+                :type="isPwd ? 'password' : 'text'"
+                dense
+              >
+                <template v-slot:prepend>
+                  <q-icon name="fingerprint" class="q-pr-md" />
+                </template>
+                <template v-slot:append>
+                  <q-icon
+                    :name="isPwd ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="isPwd = !isPwd"
+                  />
+                </template>
+              </q-input>
             </div>
           </q-card-section>
 
           <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn
-              type="submit"
-              label="Daftar Sekarang"
-              v-close-popup
-              flat
-              dense
-            />
+            <q-btn type="submit" label="Simpan Data" v-close-popup flat dense />
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
-
-    <!-- <q-dialog v-model="editDialog">
-      <q-card style="width: 900px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UBAH DATA PENGGUNA</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                text-color="white"
-                class="q-mr-md"
-                icon="admin_panel_settings"
-              />Data Pokok
-            </div>
-
-            <div class="row items-start">
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.NAMA"
-                class="text-white col-4 q-pa-sm"
-                label="Nama Lengkap"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="account_circle" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.TELEPON"
-                class="text-white col-4 q-pa-sm"
-                label="No. Telepon"
-                mask="#############"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="call" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.EMAIL"
-                class="text-white col-4 q-pa-sm"
-                label="Email"
-                type="email"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="mail_outline" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.ALAMAT"
-                class="text-white col-4 q-pa-sm"
-                label="Alamat Lengkap"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="person_pin" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.KECAMATAN"
-                class="text-white col-4 q-pa-sm"
-                label="Kecamatan"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.KABUPATEN"
-                class="text-white col-4 q-pa-sm"
-                label="Kabupaten / Kota"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.PROVINSI"
-                class="text-white col-4 q-pa-sm"
-                label="Provinsi"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
-
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                class="q-mr-md"
-                text-color="white"
-                icon="store"
-              />Data Toko
-            </div>
-
-            <div class="row items-start">
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.TOKO"
-                class="text-white col-4 q-pa-sm"
-                label="Nama Toko"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="storefront" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.ALAMAT_TOKO"
-                class="text-white col-4 q-pa-sm"
-                label="Alamat Toko"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
 
     <q-dialog
       v-model="deleteDialog"
@@ -758,14 +583,26 @@ export default {
         .get(`/users`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
-          console.log(response);
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
           }
         })
         .catch(() => this.$commonErrorNotif());
     },
-
+    detail(ID) {
+      this.detailDialog = true;
+      this.idpengguna = ID.ID;
+      this.NAMA = ID.NAMA;
+      this.TOKO = ID.TOKO;
+      this.TELEPON = ID.TELEPON;
+      this.KECAMATAN = ID.KECAMATAN;
+      this.NAMA = ID.NAMA;
+      this.TANGGAL_DAFTAR = ID.CREATED_AT;
+      this.EMAIL = ID.EMAIL;
+      this.KABUPATEN = ID.KABUPATEN;
+      this.ALAMAT = ID.ALAMAT;
+      this.PROVINSI = ID.PROVINSI;
+    },
     deleteGUID(GUID) {
       this.deleteDialog = true;
       this.idpengguna = GUID;
@@ -782,118 +619,6 @@ export default {
         })
         .catch(() => this.$commonErrorNotif());
     },
-    detail(ID) {
-      console.log(ID);
-      this.detailDialog = true;
-      this.idpengguna = ID.ID;
-      this.NAMA = ID.NAMA;
-      this.TOKO = ID.TOKO;
-      this.TELEPON = ID.TELEPON;
-      this.KECAMATAN = ID.KECAMATAN;
-      this.NAMA = ID.NAMA;
-      this.TANGGAL_DAFTAR = ID.CREATED_AT;
-      this.EMAIL = ID.EMAIL;
-      this.KABUPATEN = ID.KABUPATEN;
-      this.ALAMAT = ID.ALAMAT;
-      this.PROVINSI = ID.PROVINSI;
-    },
-
-    // FUNCTION DATA DULU
-    // editData(ID) {
-    //   console.log(ID);
-    //   this.editDialog = true;
-    //   this.ID = ID.ID;
-    //   this.GUID = ID.GUID;
-    //   this.form.NAMA = ID.NAMA;
-    //   this.form.TELEPON = ID.TELEPON;
-    //   this.form.EMAIL = ID.EMAIL;
-    //   this.form.ALAMAT = ID.ALAMAT;
-    //   this.form.KECAMATAN = ID.KECAMATAN;
-    //   this.form.KABUPATEN = ID.KABUPATEN;
-    //   this.form.PROVINSI = ID.PROVINSI;
-    //   this.form.TOKO = ID.TOKO;
-    //   this.form.ALAMAT_TOKO = ID.ALAMAT_TOKO;
-    //   this.form.LOGO_TOKO = "-";
-    //   this.form.USERNAME = ID.USERNAME;
-    //   this.form.PASSWORD = ID.PASSWORD;
-    // },
-    // detail(ID) {
-    //   console.log(ID);
-    //   this.detailDialog = true;
-    //   this.idpengguna = ID.ID;
-    //   this.NAMA = ID.NAMA;
-    //   this.TOKO = ID.TOKO;
-    //   this.TELEPON = ID.TELEPON;
-    //   this.KECAMATAN = ID.KECAMATAN;
-    //   this.NAMA = ID.NAMA;
-    //   this.TANGGAL_DAFTAR = ID.CREATED_AT;
-    //   this.EMAIL = ID.EMAIL;
-    //   this.KABUPATEN = ID.KABUPATEN;
-    //   this.ALAMAT = ID.ALAMAT;
-    //   this.PROVINSI = ID.PROVINSI;
-    // },
-    // generateRandomId(length) {
-    //   const randomStr = Math.random().toString(36).substr(2, length);
-    //   return randomStr;
-    // },
-    // onSubmit() {
-    //   this.$q.loading.show();
-    //   this.form.ID = this.generateRandomId(5);
-    //   this.$axios
-    //     .post("users/create", this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPengguna();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // onEdit(GUID) {
-    //   console.log(this.GUID);
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .put(`users/${this.GUID}`, this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((res) => {
-    //       console.log(res);
-    //       if (!this.$parseResponse(res.data)) {
-    //         this.editDialog = false;
-    //         this.getPengguna();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // getPengguna: async function () {
-    //   this.$q.loading.show();
-    //   await this.$axios
-    //     .get("/users")
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.rows = response.data.data;
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // deleteGUID(GUID) {
-    //   console.log(GUID);
-    //   this.deleteDialog = true;
-    //   this.idpengguna = GUID;
-    // },
-    // deleteData(idpengguna) {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .delete(`users/${idpengguna}`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPengguna();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
   },
 };
 </script>

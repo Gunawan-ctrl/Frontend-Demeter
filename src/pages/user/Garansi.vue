@@ -117,7 +117,9 @@
       <q-card style="width: 500px; max-width: 80vw">
         <q-form @submit="onSubmit()" class="q-gutter-md">
           <q-card-section>
-            <div class="text-h6 text-indigo">INPUT / EDIT DATA GARANSI</div>
+            <div class="text-h6 text-indigo">
+              PENDAFTARAN / UBAH DATA GARANSI
+            </div>
             <div class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
             </div>
@@ -152,53 +154,11 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Simpan" v-close-popup flat dense />
+            <q-btn type="submit" label="Simpan Data" v-close-popup flat dense />
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
-
-    <!-- <q-dialog v-model="editDialog">
-      <q-card style="width: 500px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UBAH DATA GARANSI</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-input
-              standout="bg-positive text-white"
-              v-model="form.NAMA"
-              class="text-white"
-              label="Nama Garansi"
-              dense
-            >
-              <template v-slot:prepend>
-                <q-icon name="ballot" class="q-pr-md" />
-              </template>
-            </q-input>
-            <q-input
-              standout="bg-positive text-white"
-              v-model="form.WARRANTY_DAY"
-              class="text-white"
-              label="JUMLAH HARI"
-              dense
-            >
-              <template v-slot:prepend>
-                <q-icon name="ballot" class="q-pr-md" />
-              </template>
-            </q-input>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
 
     <q-dialog
       v-model="deleteDialog"
@@ -381,8 +341,7 @@ export default {
       this.deleteDialog = true;
       this.idDelete = GUID;
     },
-    deleteData(GUID) {
-      console.log(GUID);
+    deleteData() {
       this.$q.loading.show();
       this.$axios
         .delete(`garansi/${this.idDelete}`)
@@ -394,76 +353,6 @@ export default {
         })
         .catch(() => this.$commonErrorNotif());
     },
-    // editData(ID) {
-    //   this.editDialog = true;
-    //   this.form.ID = ID.ID_GARANSI;
-    //   this.GUID = ID.GUID;
-    //   this.form.NAMA = ID.NAMA;
-    //   this.form.WARRANTY_DAY = ID.WARRANTY_DAY;
-    // },
-    // generateRandomId(length) {
-    //   const randomStr = Math.random().toString(36).substr(2, length);
-    //   return randomStr;
-    // },
-    // onSubmit() {
-    //   this.$q.loading.show();
-    //   this.form.ID_PENGGUNA = this.dataPengguna.user.ID;
-    //   this.form.ID_GARANSI = this.generateRandomId(5);
-    //   this.$axios
-    //     .post("garansi/create", this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getGaransi();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // onEdit(GUID) {
-    //   console.log(this.form);
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .put(`garansi/update/${this.GUID}`, this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.editDialog = false;
-    //         this.getGaransi();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // getGaransi: async function () {
-    //   // this.$q.loading.show();
-    //   await this.$axios
-    //     .get(`/garansi`)
-    //     // .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.rows = response.data.data;
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // deleteGUID(GUID) {
-    //   this.deleteDialog = true;
-    //   this.idGaransi = GUID;
-    // },
-    // deleteData(idGaransi) {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .delete(`garansi/${idGaransi}`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getGaransi();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
   },
 };
 </script>

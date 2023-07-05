@@ -109,7 +109,7 @@
         <q-form @submit="onSubmit()" class="q-gutter-md">
           <q-card-section>
             <div class="text-h6 text-indigo">
-              INPUT / EDIT DATA SATUAN PRODUK
+              PENDAFTARAN / UBAH DATA SATUAN PRODUK
             </div>
             <div class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
@@ -131,42 +131,11 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Simpan" v-close-popup flat dense />
+            <q-btn type="submit" label="Simpan Data" v-close-popup flat dense />
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
-
-    <!-- <q-dialog v-model="editDialog">
-      <q-card style="width: 500px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UBAH DATA SATUAN PRODUK</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-input
-              standout="bg-positive text-white"
-              v-model="form.NAMA"
-              class="text-white"
-              label="Nama Satuan"
-              dense
-            >
-              <template v-slot:prepend>
-                <q-icon name="tag" class="q-pr-md" />
-              </template>
-            </q-input>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
 
     <q-dialog
       v-model="deleteDialog"
@@ -312,7 +281,6 @@ export default {
           .post("satuan/create", this.form)
           .finally(() => this.$q.loading.hide())
           .then((response) => {
-            console.log(response);
             if (!this.$parseResponse(response.data)) {
             }
             this.dialog = false;
@@ -327,20 +295,17 @@ export default {
         .get(`/satuan`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
-          console.log(response);
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
           }
         })
         .catch(() => this.$commonErrorNotif());
     },
-
     deleteGUID(GUID) {
       this.deleteDialog = true;
       this.idDelete = GUID;
     },
-    deleteData(GUID) {
-      console.log(GUID);
+    deleteData() {
       this.$q.loading.show();
       this.$axios
         .delete(`satuan/${this.idDelete}`)
@@ -352,77 +317,6 @@ export default {
         })
         .catch(() => this.$commonErrorNotif());
     },
-    // editData(ID) {
-    //   this.editDialog = true;
-    //   this.form.ID = ID.ID_SATUAN;
-    //   this.GUID = ID.GUID;
-    //   this.form.NAMA = ID.NAMA;
-    // },
-    // generateRandomId(length) {
-    //   const randomStr = Math.random().toString(36).substr(2, length);
-    //   return randomStr;
-    // },
-    // onSubmit() {
-    //   this.$q.loading.show();
-    //   this.form.ID_PENGGUNA = this.dataPengguna.user.ID;
-    //   this.form.ID_SATUAN = this.generateRandomId(5);
-    //   this.$axios
-    //     .post("satuan/create", this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getSatuan();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // onEdit() {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .put(`satuan/update/${this.GUID}`, this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.editDialog = false;
-    //         this.getSatuan();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // getSatuan: async function () {
-    //   this.$q.loading.show();
-    //   await this.$axios
-    //     .get(`/satuan`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.rows = response.data.data;
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // deleteGUID(GUID) {
-    //   this.deleteDialog = true;
-    //   this.idsatuan = GUID;
-    // },
-    // deleteData(idsatuan) {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .delete(`satuan/${idsatuan}`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getSatuan();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
   },
 };
 </script>
-
-<style lang="sass" scoped>
-.example-item
-  height: 290px
-  width: 290px
-</style>

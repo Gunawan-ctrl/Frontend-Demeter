@@ -120,7 +120,7 @@
         <q-item class="q-pa-md">
           <q-item-section>
             <q-item-label class="text-h6 text-indigo">
-              INPUT / EDIT KATEGORI BARU
+              PENDAFTARAN / UBAH KATEGORI BARU
             </q-item-label>
             <q-item-label class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
@@ -158,77 +158,11 @@
 
           <q-separator />
           <q-card-actions align="right" class="text-indigo">
-            <q-btn flat type="submit" label="Tambahkan" color="primary" />
+            <q-btn flat type="submit" label="Simpan Data" color="primary" />
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
-
-    <!-- DIALOG PENDAFTARAN KATEGORI BARU -->
-    <!-- <q-dialog v-model="fullWidth">
-      <q-card style="width: 500px; max-width: 80vw">
-        <q-form @submit="onSubmit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">PENDAFTARAN KATEGORI BARU</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum mendaftarkan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <div class="row items-start">
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.NAMA"
-                class="text-white"
-                label="Nama Kategori"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="ballot" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="TAMBAHKAN" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
-
-    <!-- DIALOG EDIT DATA KATEGORI -->
-    <!-- <q-dialog v-model="editDialog">
-      <q-card style="width: 500px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UBAH DATA KATEGORI</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <q-input
-              standout="bg-positive text-white"
-              v-model="form.NAMA"
-              class="text-white"
-              label="Nama Kategori"
-              dense
-            >
-              <template v-slot:prepend>
-                <q-icon name="ballot" class="q-pr-md" />
-              </template>
-            </q-input>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
 
     <q-dialog
       v-model="deleteDialog"
@@ -400,7 +334,7 @@ export default {
       this.deleteDialog = true;
       this.idkategori = GUID;
     },
-    deleteData(GUID) {
+    deleteData() {
       this.$q.loading.show();
       this.$axios
         .delete(`kategori/${this.idkategori}`)

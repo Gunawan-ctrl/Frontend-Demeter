@@ -387,10 +387,9 @@ export default {
         .finally(() => {
           this.$q.loading.hide();
         })
-        .then((res) => {
-          console.log(res);
+        .then((response) => {
           if (!this.$parseResponse(res.data)) {
-            this.rowsPengguna = res.data.data;
+            this.rowsPengguna = response.data.data;
           }
         })
         .catch();
@@ -402,10 +401,9 @@ export default {
         .finally(() => {
           this.$q.loading.hide();
         })
-        .then((res) => {
-          console.log(res);
+        .then((response) => {
           if (!this.$parseResponse(res.data)) {
-            this.rowsPerangkat = res.data.data;
+            this.rowsPerangkat = response.data.data;
           }
         })
         .catch();

@@ -111,14 +111,6 @@
                 size="sm"
                 icon="edit"
               />
-              <!-- <q-btn
-                round
-                flat
-                color="indigo"
-                @click="this.editData(props.row)"
-                size="sm"
-                icon="edit"
-              /> -->
               <q-btn
                 round
                 flat
@@ -135,8 +127,6 @@
 
     <q-dialog v-model="detailDialog" position="bottom">
       <q-card style="width: 700px; max-width: 80vw">
-        <q-linear-progress :value="0.5" color="green" />
-
         <q-card-section class="items-center no-wrap">
           <div>
             <div class="text-weight-bold">DETAIL DATA SUPPLIER</div>
@@ -188,7 +178,9 @@
       <q-card style="width: 900px; max-width: 80vw">
         <q-form @submit="onSubmit()" class="q-gutter-md">
           <q-card-section>
-            <div class="text-h6 text-indigo">INPUT / EDIT DATA SUPPLIER</div>
+            <div class="text-h6 text-indigo">
+              PENDAFTARAN / UBAH DATA SUPPLIER
+            </div>
             <div class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
             </div>
@@ -290,123 +282,11 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Simpan" v-close-popup flat dense />
+            <q-btn type="submit" label="Simpan Data" v-close-popup flat dense />
           </q-card-actions>
         </q-form>
       </q-card>
     </q-dialog>
-
-    <!-- <q-dialog v-model="editDialog">
-      <q-card style="width: 900px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UBAH DATA SUPPLIER</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                text-color="white"
-                class="q-mr-md"
-                icon="admin_panel_settings"
-              />Data Pokok
-            </div>
-
-            <div class="row items-start">
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.NAMA"
-                class="text-white col-4 q-pa-sm"
-                label="Nama Lengkap"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="account_circle" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.TELEPON"
-                class="text-white col-4 q-pa-sm"
-                label="No. Telepon"
-                mask="#############"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="call" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.EMAIL"
-                class="text-white col-4 q-pa-sm"
-                label="Email"
-                type="email"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="mail_outline" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.ALAMAT"
-                class="text-white col-4 q-pa-sm"
-                label="Alamat Lengkap"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="person_pin" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.KECAMATAN"
-                class="text-white col-4 q-pa-sm"
-                label="Kecamatan"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.KABUPATEN"
-                class="text-white col-4 q-pa-sm"
-                label="Kabupaten / Kota"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.PROVINSI"
-                class="text-white col-4 q-pa-sm"
-                label="Provinsi"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
 
     <q-dialog
       v-model="deleteDialog"
@@ -608,28 +488,9 @@ export default {
         .get(`/pemasok`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
-          console.log(response);
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
           }
-        })
-        .catch(() => this.$commonErrorNotif());
-    },
-
-    deleteGUID(GUID) {
-      this.deleteDialog = true;
-      this.idpemasok = GUID;
-    },
-    deleteData(GUID) {
-      console.log(GUID);
-      this.$q.loading.show();
-      this.$axios
-        .delete(`pemasok/${this.idpemasok}`)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          if (!this.$parseResponse(response.data)) {
-          }
-          this.getData();
         })
         .catch(() => this.$commonErrorNotif());
     },
@@ -649,80 +510,22 @@ export default {
       this.alamat = ID.ALAMAT;
       this.provinsi = ID.PROVINSI;
     },
-    // editData(ID) {
-    //   this.editDialog = true;
-    //   this.form.ID = ID.ID_PEMASOK;
-    //   this.GUID = ID.GUID;
-    //   this.form.NAMA = ID.NAMA;
-    //   this.form.TELEPON = ID.TELEPON;
-    //   this.form.EMAIL = ID.EMAIL;
-    //   this.form.ALAMAT = ID.ALAMAT;
-    //   this.form.KECAMATAN = ID.KECAMATAN;
-    //   this.form.KABUPATEN = ID.KABUPATEN;
-    //   this.form.PROVINSI = ID.PROVINSI;
-    //   this.form.PROFIL = "-";
-    // },
-    // generateRandomId(length) {
-    //   const randomStr = Math.random().toString(36).substr(2, length);
-    //   return randomStr;
-    // },
-    // onSubmit() {
-    //   this.$q.loading.show();
-    //   this.form.ID_PENGGUNA = this.dataPengguna.user.ID;
-    //   this.form.ID_PEMASOK = this.generateRandomId(5);
-    //   this.$axios
-    //     .post("pemasok/create", this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPemasok();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // onEdit() {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .put(`pemasok/update/${this.GUID}`, this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.editDialog = false;
-    //         this.getPemasok();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // getPemasok: async function () {
-    //   this.$q.loading.show();
-    //   await this.$axios
-    //     .get(`/pemasok`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.rows = response.data.data;
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // deleteGUID(GUID) {
-    //   this.deleteDialog = true;
-    //   this.idpemasok = GUID;
-    // },
-    // deleteData(idpemasok) {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .delete(`pemasok/${idpemasok}`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPemasok();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
+    deleteGUID(GUID) {
+      this.deleteDialog = true;
+      this.idpemasok = GUID;
+    },
+    deleteData() {
+      this.$q.loading.show();
+      this.$axios
+        .delete(`pemasok/${this.idpemasok}`)
+        .finally(() => this.$q.loading.hide())
+        .then((response) => {
+          if (!this.$parseResponse(response.data)) {
+          }
+          this.getData();
+        })
+        .catch(() => this.$commonErrorNotif());
+    },
   },
 };
 </script>

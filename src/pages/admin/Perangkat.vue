@@ -117,13 +117,6 @@
             </q-card>
           </div>
         </div>
-        <div class="col q-mt-md text-weight-medium text-indigo-10">
-          Data Perangkat
-        </div>
-        <div class="col text-caption text-grey-6">
-          Seluruh data perangkat yang telah di daftarkan akan di tampilkan dalam
-          table data
-        </div>
         <div class="col q-mt-sm">
           <q-table
             :rows="rows"
@@ -135,6 +128,15 @@
             :pagination="pagination"
           >
             <template v-slot:top>
+              <div class="col">
+                <div class="col q-table__title">
+                  DATA PERANGKAT <strong>DEMETER</strong>
+                </div>
+                <div class="text-caption">
+                  Seluruh data perangkat yang telah di daftarkan akan di
+                  tampilkan dalam table data
+                </div>
+              </div>
               <q-space />
 
               <q-btn
@@ -384,8 +386,6 @@
 
     <q-dialog v-model="detailDialog" position="bottom">
       <q-card style="width: 500px; max-width: 80vw">
-        <q-linear-progress :value="0.5" color="green" />
-
         <q-card-section class="items-center no-wrap">
           <div>
             <div class="text-weight-bold">DETAIL DATA PERANGKAT</div>
@@ -432,77 +432,12 @@
       </q-card>
     </q-dialog>
 
-    <!-- <q-dialog v-model="editDialog">
-      <q-card style="width: 900px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UBAH DATA PERANGKAT</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                text-color="white"
-                class="q-mr-md"
-                icon="devices"
-              />Data Perangkat
-            </div>
-            <div class="row items-start">
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.NAMA"
-                class="text-white col-4 q-pa-sm"
-                label="Nama Perangkat"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="devices" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.MAC"
-                class="text-white col-4 q-pa-sm"
-                label="MAC Address"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="pin" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-select
-                standout="bg-positive text-white"
-                v-model="form.JENIS"
-                class="text-white col-4 q-pa-sm"
-                label="Jenis Perangkat"
-                :options="options"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="storage" class="q-pr-md" />
-                </template>
-              </q-select>
-            </div>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
-
     <q-dialog v-model="dialog">
       <q-card style="width: 900px; max-width: 80vw">
         <q-form @submit="onSubmit()" class="q-gutter-md">
           <q-card-section>
             <div class="text-h6 text-indigo">
-              PENDAFTARAN / UBAH PERANGKAT BARU
+              PENDAFTARAN / UBAH DATA PERANGKAT
             </div>
             <div class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
@@ -558,13 +493,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn
-              type="submit"
-              label="simpan perangkat"
-              v-close-popup
-              flat
-              dense
-            />
+            <q-btn type="submit" label="Simpan Data" v-close-popup flat dense />
           </q-card-actions>
         </q-form>
       </q-card>
@@ -634,7 +563,6 @@ export default {
       dialog: false,
       idActive: null,
       detailDialog: false,
-      editDialog: false,
       deleteDialog: false,
       idperangkat: null,
       nama: null,
@@ -767,12 +695,19 @@ export default {
         .get(`/perangkat`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
-          console.log(response);
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
           }
         })
         .catch(() => this.$commonErrorNotif());
+    },
+    detail(ID) {
+      this.detailDialog = true;
+      this.idperangkat = ID.ID;
+      this.NAMA = ID.NAMA;
+      this.MAC = ID.MAC;
+      this.JENIS = ID.JENIS;
+      this.TANGGAL_DAFTAR = ID.CREATED_AT;
     },
     deleteGUID(GUID) {
       this.deleteDialog = true;
@@ -793,86 +728,6 @@ export default {
     onDataUrlChange(dataUrl) {
       this.dataUrl = dataUrl;
     },
-
-    // FUNCTION DATA DAHULU
-    // editData(ID) {
-    //   this.editDialog = true;
-    //   this.ID = ID.ID_PERANGKAT;
-    //   this.form.NAMA = ID.NAMA;
-    //   this.form.MAC = ID.MAC;
-    //   this.form.JENIS = ID.JENIS;
-    // },
-    // detail(ID) {
-    //   console.log(ID);
-    //   this.detailDialog = true;
-    //   this.idperangkat = ID.ID;
-    //   this.NAMA = ID.NAMA;
-    //   this.MAC = ID.MAC;
-    //   this.JENIS = ID.JENIS;
-    //   this.TANGGAL_DAFTAR = ID.CREATED_AT;
-    // },
-    // generateRandomId(length) {
-    //   const randomStr = Math.random().toString(36).substr(2, length);
-    //   return randomStr;
-    // },
-    // onSubmit() {
-    //   this.$q.loading.show();
-    //   this.form.ID_PERANGKAT = this.generateRandomId(5);
-    //   this.$axios
-    //     .post("/perangkat/create", this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPerangkat();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // onEdit() {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .put(`perangkat/${this.ID}`, this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.editDialog = false;
-    //         this.getPerangkat();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // getPerangkat: async function () {
-    //   this.$q.loading.show();
-    //   await this.$axios
-    //     .get("perangkat/")
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.rows = response.data.data;
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // onDataUrlChange(dataUrl) {
-    //   this.dataUrl = dataUrl;
-    // },
-    // delete(ID) {
-    //   this.deleteDialog = true;
-    //   this.idperangkat = ID.ID;
-    // },
-    // deleteData(idperangkat) {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .delete(`perangkat/${idperangkat}`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPerangkat();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
   },
 };
 </script>

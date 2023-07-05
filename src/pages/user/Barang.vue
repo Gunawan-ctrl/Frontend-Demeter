@@ -23,7 +23,7 @@
             size="sm"
             icon="shopping_bag"
             label="Barang Baru"
-            @click="fullWidth = true"
+            @click="openDialog(false, null)"
           />
         </div>
       </div>
@@ -88,37 +88,26 @@
                 class="rounded-borders"
                 :ratio="16 / 9"
                 style="width: 70px"
-                :src="`${port}${props.row.IMAGE.IMAGE1}`"
+                :src="
+                  props.row.IMAGE == undefined ||
+                  props.row.IMAGE.IMAGE1 == undefined ||
+                  props.row.IMAGE.IMAGE1 == null
+                    ? 'images/icons/demeter.png'
+                    : `${port}${props.row.IMAGE.IMAGE1}`
+                "
               />
-            </q-td>
-            <q-td key="IMAGE2" :props="props">
-              <q-img
+              <!-- <q-img
                 crossorigin="anonymous"
                 class="rounded-borders"
                 :ratio="16 / 9"
                 style="width: 70px"
-                :src="`${port}${props.row.IMAGE.IMAGE2}`"
-              />
+                :src="
+                  this.IMAGE1 === undefined || this.IMAGE1 === '-'
+                    ? 'images/icons/user.png'
+                    : `${port}${this.IMAGE1}`
+                "
+              /> -->
             </q-td>
-            <q-td key="IMAGE3" :props="props">
-              <q-img
-                crossorigin="anonymous"
-                class="rounded-borders"
-                :ratio="16 / 9"
-                style="width: 70px"
-                :src="`${port}${props.row.IMAGE.IMAGE3}`"
-              />
-            </q-td>
-            <q-td key="IMAGE4" :props="props">
-              <q-img
-                crossorigin="anonymous"
-                class="rounded-borders"
-                :ratio="16 / 9"
-                style="width: 70px"
-                :src="`${port}${props.row.IMAGE.IMAGE4}`"
-              />
-            </q-td>
-
             <q-td key="KATEGORI" :props="props">
               {{ props.row.KATEGORI }}
             </q-td>
@@ -151,7 +140,15 @@
                 round
                 flat
                 color="indigo"
-                @click="this.editData(props.row)"
+                @click="this.detail(props.row)"
+                size="sm"
+                icon="visibility"
+              />
+              <q-btn
+                round
+                flat
+                color="indigo"
+                @click="openDialog(true, props.row)"
                 size="sm"
                 icon="edit"
               />
@@ -169,11 +166,133 @@
       </q-table>
     </q-card>
 
-    <q-dialog v-model="fullWidth">
+    <q-dialog v-model="detailDialog" position="bottom">
+      <q-card style="width: 700px; max-width: 80vw">
+        <q-card-section class="row">
+          <div>
+            <div class="text-weight-bold">GAMBAR DEPAN</div>
+            <div class="text-grey">Tampak depan</div>
+            <div>
+              <q-avatar size="100px">
+                <img
+                  crossorigin="anonymous"
+                  :src="
+                    this.form.IMAGE.IMAGE1 == undefined ||
+                    this.form.IMAGE.IMAGE1 === '-'
+                      ? 'images/icons/demeter.png'
+                      : `${port}${this.form.IMAGE.IMAGE1}`
+                  "
+                />
+              </q-avatar>
+            </div>
+          </div>
+          <div class="q-ml-lg">
+            <div class="text-weight-bold">GAMBAR BELAKANG</div>
+            <div class="text-grey">Tampak belakang</div>
+            <div>
+              <q-avatar size="100px">
+                <img
+                  crossorigin="anonymous"
+                  :src="
+                    this.IMAGE2 == undefined || this.IMAGE2 === '-'
+                      ? 'images/icons/demeter.png'
+                      : `${port}${this.IMAGE2}`
+                  "
+                />
+              </q-avatar>
+            </div>
+          </div>
+          <div class="q-ml-lg">
+            <div class="text-weight-bold">GAMBAR SAMPING KANAN</div>
+            <div class="text-grey">Tampak samping kanan</div>
+            <div>
+              <q-avatar size="100px">
+                <img
+                  crossorigin="anonymous"
+                  :src="
+                    this.IMAGE3 == undefined || this.IMAGE3 === '-'
+                      ? 'images/icons/demeter.png'
+                      : `${port}${this.IMAGE3}`
+                  "
+                />
+              </q-avatar>
+            </div>
+          </div>
+          <div class="q-ml-lg">
+            <div class="text-weight-bold">GAMBAR SAMPING KIRI</div>
+            <div class="text-grey">Tampak samping kiri</div>
+            <div>
+              <q-avatar size="100px">
+                <img
+                  crossorigin="anonymous"
+                  :src="
+                    this.IMAGE4 == undefined || this.IMAGE4 === '-'
+                      ? 'images/icons/demeter.png'
+                      : `${port}${this.IMAGE4}`
+                  "
+                />
+              </q-avatar>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-separator />
+        <q-card-section class="items-center no-wrap">
+          <div class="row">
+            <div>
+              <div class="text-weight-bold">Nama Barang</div>
+              <div class="text-grey">{{ this.form.NAMA }}</div>
+              <div class="text-weight-bold">Kategori</div>
+              <div class="text-grey">{{ this.form.KATEGORI }}</div>
+              <div class="text-weight-bold">Harga Modal</div>
+              <div class="text-grey">{{ this.form.MODAL }}</div>
+            </div>
+            <div class="q-ml-lg">
+              <div class="text-weight-bold">Harga Jual</div>
+              <div class="text-grey">{{ this.form.JUAL }}</div>
+              <div class="text-weight-bold">Stok</div>
+              <div class="text-grey">{{ this.form.STOK }}</div>
+              <div class="text-weight-bold">Satuan</div>
+              <div class="text-grey">{{ this.form.SATUAN }}</div>
+            </div>
+            <div class="q-ml-lg">
+              <div class="text-weight-bold">Penjualan</div>
+              <div class="text-grey">{{ this.form.JENIS_PENJUALAN }}</div>
+              <div class="text-weight-bold">Jenis Garansi</div>
+              <div class="text-grey">{{ this.form.GARANSI.NAMA }}</div>
+              <div class="text-weight-bold">Garansi</div>
+              <div class="text-grey">{{ this.form.GARANSI.NAMA }}</div>
+            </div>
+            <div class="q-ml-lg">
+              <div class="text-weight-bold">Panjang</div>
+              <div class="text-grey">{{ this.form.UKURAN.PANJANG }}</div>
+              <div class="text-weight-bold">Lebar</div>
+              <div class="text-grey">{{ this.form.UKURAN.LEBAR }}</div>
+              <div class="text-weight-bold">Tinggi</div>
+              <div class="text-grey">{{ this.form.UKURAN.TINGGI }}</div>
+            </div>
+            <div class="q-ml-lg">
+              <div class="text-weight-bold">Deskripsi</div>
+              <div class="text-grey">{{ this.form.DESKRIPSI }}</div>
+              <div class="text-weight-bold">Dikirim</div>
+              <div class="text-grey">{{ this.form.DIKIRIM }}</div>
+              <div class="text-weight-bold">Tanggal Daftar</div>
+              <div class="text-grey">
+                {{ this.$parseDate(this.form.TANGGAL_DAFTAR).fullDate }}
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="dialog">
       <q-card style="width: 900px; max-width: 80vw">
         <q-form @submit="onSubmit()" class="q-gutter-md">
           <q-card-section>
-            <div class="text-h6 text-indigo">PENDAFTARAN BARANG BARU</div>
+            <div class="text-h6 text-indigo">
+              PENDAFTARAN / UBAH DATA BARANG
+            </div>
             <div class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
             </div>
@@ -311,7 +430,7 @@
                 accept=".jpg, image/*"
                 class="text-white col-3 q-pa-sm"
                 dense
-                v-model="form.IMAGE1"
+                v-model="form.IMAGE.IMAGE1"
                 label="Foto Depan"
               >
                 <template v-slot:prepend>
@@ -323,7 +442,7 @@
                 accept=".jpg, image/*"
                 class="text-white col-3 q-pa-sm"
                 dense
-                v-model="form.IMAGE2"
+                v-model="form.IMAGE.IMAGE2"
                 label="Foto Belakang"
               >
                 <template v-slot:prepend>
@@ -335,7 +454,7 @@
                 accept=".jpg, image/*"
                 class="text-white col-3 q-pa-sm"
                 dense
-                v-model="form.IMAGE3"
+                v-model="form.IMAGE.IMAGE3"
                 label="Foto Kanan"
               >
                 <template v-slot:prepend>
@@ -347,7 +466,7 @@
                 accept=".jpg, image/*"
                 class="text-white col-3 q-pa-sm"
                 dense
-                v-model="form.IMAGE4"
+                v-model="form.IMAGE.IMAGE4"
                 label="Foto Kiri"
               >
                 <template v-slot:prepend>
@@ -380,7 +499,7 @@
               </q-select>
               <q-select
                 standout="bg-positive text-white"
-                v-model="form.JENIS_GARANSI"
+                v-model="form.GARANSI.JENIS"
                 class="text-white col-4 q-pa-sm"
                 label="Jenis Garansi"
                 :options="options.optionsGaransi"
@@ -395,7 +514,7 @@
               <q-input
                 type="number"
                 standout="bg-positive text-white"
-                v-model="form.GARANSI"
+                v-model="form.GARANSI.NAMA"
                 class="text-white col-4 q-pa-sm"
                 label="Masa Garansi"
                 dense
@@ -407,7 +526,7 @@
               <q-input
                 type="number"
                 standout="bg-positive text-white"
-                v-model="form.BERAT"
+                v-model="form.UKURAN.BERAT"
                 class="text-white col-4 q-pa-sm"
                 label="Berat"
                 mask="####"
@@ -423,7 +542,7 @@
               <q-input
                 type="number"
                 standout="bg-positive text-white"
-                v-model="form.PANJANG"
+                v-model="form.UKURAN.PANJANG"
                 class="text-white col-4 q-pa-sm"
                 label="Panjang"
                 mask="####"
@@ -439,7 +558,7 @@
               <q-input
                 type="number"
                 standout="bg-positive text-white"
-                v-model="form.LEBAR"
+                v-model="form.UKURAN.LEBAR"
                 class="text-white col-4 q-pa-sm"
                 label="Lebar"
                 mask="####"
@@ -455,7 +574,7 @@
               <q-input
                 type="number"
                 standout="bg-positive text-white"
-                v-model="form.TINGGI"
+                v-model="form.UKURAN.TINGGI"
                 class="text-white col-4 q-pa-sm"
                 label="Tinggi"
                 mask="####"
@@ -495,339 +614,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Tambahkan" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model="editDialog">
-      <q-card style="width: 900px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UBAH DATA BARANG BARU</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                text-color="white"
-                class="q-mr-md"
-                icon="admin_panel_settings"
-              />Data Pokok
-            </div>
-
-            <div class="row items-start">
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.NAMA"
-                class="text-white col-4 q-pa-sm"
-                label="Nama Barang"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="shopping_bag" class="q-pr-md"
-                /></template>
-              </q-input>
-
-              <q-select
-                standout="bg-positive text-white"
-                v-model="form.KATEGORI"
-                class="text-white col-4 q-pa-sm"
-                label="Kategori"
-                :options="options.optionsKategori"
-                option-label="NAMA"
-                key="NAMA"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="ballot" class="q-pr-md" />
-                </template>
-                <template v-slot:option="scope">
-                  <q-item v-bind="scope.itemProps">
-                    <q-item-section>
-                      <q-item-label>{{ scope.opt.NAMA }}</q-item-label>
-                      <q-item-label caption
-                        ><q-badge color="positive">{{
-                          scope.opt.ID_KATEGORI
-                        }}</q-badge></q-item-label
-                      >
-                    </q-item-section>
-                  </q-item>
-                </template></q-select
-              >
-              <q-select
-                standout="bg-positive text-white"
-                v-model="form.SATUAN"
-                class="text-white col-4 q-pa-sm"
-                label="Satuan"
-                :options="options.optionsSatuan"
-                option-label="NAMA"
-                key="NAMA"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="tag" class="q-pr-md" />
-                </template>
-                <template v-slot:option="scope">
-                  <q-item v-bind="scope.itemProps">
-                    <q-item-section>
-                      <q-item-label>{{ scope.opt.NAMA }}</q-item-label>
-                      <q-item-label caption>
-                        <q-badge color="positive">
-                          {{ scope.opt.ID_SATUAN }}
-                        </q-badge>
-                      </q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </template>
-              </q-select>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.MODAL"
-                class="text-white col-4 q-pa-sm"
-                label="Harga Modal"
-                mask="#############"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="paid" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.JUAL"
-                class="text-white col-4 q-pa-sm"
-                label="Harga Jual"
-                mask="#############"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="paid" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.STOK"
-                class="text-white col-4 q-pa-sm"
-                label="Stok Barang"
-                mask="#######"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="money" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
-
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                class="q-mr-md"
-                text-color="white"
-                icon="store"
-              />Upload Foto Barang
-            </div>
-            <div class="row items-start">
-              <q-file
-                standout="bg-positive text-white"
-                accept=".jpg, image/*"
-                class="text-white col-3 q-pa-sm"
-                dense
-                v-model="form.IMAGE1"
-                label="Foto Depan"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="cloud_upload" />
-                </template>
-              </q-file>
-              <q-file
-                standout="bg-positive text-white"
-                accept=".jpg, image/*"
-                class="text-white col-3 q-pa-sm"
-                dense
-                v-model="form.IMAGE2"
-                label="Foto Belakang"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="cloud_upload" />
-                </template>
-              </q-file>
-              <q-file
-                standout="bg-positive text-white"
-                accept=".jpg, image/*"
-                class="text-white col-3 q-pa-sm"
-                dense
-                v-model="form.IMAGE3"
-                label="Foto Kanan"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="cloud_upload" />
-                </template>
-              </q-file>
-              <q-file
-                standout="bg-positive text-white"
-                accept=".jpg, image/*"
-                class="text-white col-3 q-pa-sm"
-                dense
-                v-model="form.IMAGE4"
-                label="Foto Kiri"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="cloud_upload" />
-                </template>
-              </q-file>
-            </div>
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                class="q-mr-md"
-                text-color="white"
-                icon="store"
-              />Data Pendukung
-            </div>
-
-            <div class="row items-start">
-              <q-select
-                standout="bg-positive text-white"
-                v-model="form.JENIS_PENJUALAN"
-                class="text-white col-4 q-pa-sm"
-                label="Jenis Penjualan"
-                :options="optionsJenisPenjualan"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="pix" class="q-pr-md" />
-                </template>
-              </q-select>
-              <q-select
-                standout="bg-positive text-white"
-                v-model="form.JENIS_GARANSI"
-                class="text-white col-4 q-pa-sm"
-                label="Jenis Garansi"
-                :options="options.optionsKategori"
-                option-label="NAMA"
-                key="NAMA"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="safety_check" class="q-pr-md" />
-                </template>
-              </q-select>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.GARANSI"
-                class="text-white col-4 q-pa-sm"
-                label="Masa Garansi"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="safety_check" class="q-pr-md"
-                /></template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.BERAT"
-                class="text-white col-4 q-pa-sm"
-                label="Berat"
-                mask="####"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="scale" class="q-pr-md" />
-                </template>
-                <template v-slot:append
-                  ><div class="text-caption">Kg</div>
-                </template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.PANJANG"
-                class="text-white col-4 q-pa-sm"
-                label="Panjang"
-                mask="####"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="straighten" class="q-pr-md" />
-                </template>
-                <template v-slot:append
-                  ><div class="text-caption">Cm</div>
-                </template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.LEBAR"
-                class="text-white col-4 q-pa-sm"
-                label="Lebar"
-                mask="####"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="straighten" class="q-pr-md" />
-                </template>
-                <template v-slot:append
-                  ><div class="text-caption">Cm</div>
-                </template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.TINGGI"
-                class="text-white col-4 q-pa-sm"
-                label="Tinggi"
-                mask="####"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="straighten" class="q-pr-md" />
-                </template>
-                <template v-slot:append>
-                  <div class="text-caption">Cm</div>
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.DIKIRIM"
-                class="text-white col-8 q-pa-sm"
-                label="Dikirim dari"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.DESKRIPSI"
-                class="text-white col-12 q-pa-sm"
-                label="Deskripsi produk"
-                type="textarea"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="description" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
+            <q-btn type="submit" label="Simpan Data" v-close-popup flat dense />
           </q-card-actions>
         </q-form>
       </q-card>
@@ -880,23 +667,28 @@ import { ListService } from "../../helper/services/ListService";
 const model = () => {
   return {
     NAMA: null,
-    IMAGE1: null,
-    IMAGE2: null,
-    IMAGE3: null,
-    IMAGE4: null,
+    IMAGE: {
+      IMAGE1: null,
+      IMAGE2: null,
+      IMAGE3: null,
+      IMAGE4: null,
+    },
     KATEGORI: null,
     SATUAN: null,
     MODAL: null,
     JUAL: null,
     STOK: null,
-    JENIS_PENJUALAN: null,
-    JENIS_GARANSI: null,
-    GARANSI: null,
-    BERAT: null,
-    PANJANG: null,
-    LEBAR: null,
-    TINGGI: null,
-    DIKIRIM: null,
+    GARANSI: {
+      NAMA: null,
+      JENIS: null,
+    },
+    UKURAN: {
+      BERAT: null,
+      PANJANG: null,
+      LEBAR: null,
+      TINGGI: null,
+      DIKIRIM: null,
+    },
     DESKRIPSI: null,
   };
 };
@@ -907,38 +699,44 @@ export default {
   data() {
     return {
       port: "http://192.168.18.36:5034/",
+      // port: "http://localhost:5034/",
+      form: model(),
       dataPengguna: this.$q.localStorage.getItem("data"),
-      editDialog: false,
+      editMode: false,
+      dialog: false,
+      idActive: null,
+      detailDialog: false,
       deleteDialog: false,
       optionsJenisPenjualan: ["Eceran", "Grosir"],
       optionsJenisGaransi: ["Garansi Penjual", "Garansi Pengiriman"],
       options: { optionsKategori: [], optionsSatuan: [] },
-      ID: "",
-      idbarang: null,
-      NAMA: null,
-      IMAGE1: null,
-      IMAGE2: null,
-      IMAGE3: null,
-      IMAGE4: null,
-      KATEGORI: null,
-      SATUAN: null,
-      MODAL: null,
-      JUAL: null,
-      STOK: null,
-      JENIS_PENJUALAN: null,
-      JENIS_GARANSI: null,
-      GARANSI: null,
-      BERAT: null,
-      PANJANG: null,
-      LEBAR: null,
-      TINGGI: null,
-      DIKIRIM: null,
-      DESKRIPSI: null,
-      tanggaldaftar: null,
+      // ID: "",
+      // idbarang: null,
+      // NAMA: null,
+      // IMAGE1: null,
+      // IMAGE2: null,
+      // IMAGE3: null,
+      // IMAGE4: null,
+      // KATEGORI: null,
+      // SATUAN: null,
+      // MODAL: null,
+      // JUAL: null,
+      // STOK: null,
+      // JENIS_PENJUALAN: null,
+      // JENIS_GARANSI: null,
+      // GARANSI: null,
+      // BERAT: null,
+      // PANJANG: null,
+      // LEBAR: null,
+      // TINGGI: null,
+      // DIKIRIM: null,
+      // DESKRIPSI: null,
+      // tanggaldaftar: null,
+
       filter: "",
       visibles: false,
       fullWidth: false,
-      form: model(),
+
       pagination: {
         sortBy: "desc",
         descending: false,
@@ -962,26 +760,8 @@ export default {
         {
           name: "IMAGE1",
           align: "left",
-          label: "GAMBAR DEPAN",
+          label: "GAMBAR",
           field: "IMAGE1",
-        },
-        {
-          name: "IMAGE2",
-          align: "left",
-          label: "GAMBAR BELAKANG",
-          field: "IMAGE2",
-        },
-        {
-          name: "IMAGE3",
-          align: "left",
-          label: "GAMBAR KANAN",
-          field: "IMAGE3",
-        },
-        {
-          name: "IMAGE4",
-          align: "left",
-          label: "GAMBAR KIRI",
-          field: "IMAGE4",
         },
         {
           name: "KATEGORI",
@@ -1008,30 +788,6 @@ export default {
           field: "STOK",
         },
         {
-          name: "SATUAN",
-          align: "left",
-          label: "SATUAN",
-          field: "SATUAN",
-        },
-        {
-          name: "JENIS_PENJUALAN",
-          align: "left",
-          label: "PENJUALAN",
-          field: "JENIS_PENJUALAN",
-        },
-        {
-          name: "JENIS_GARANSI",
-          align: "left",
-          label: "JENIS GARANSI",
-          field: "JENIS_GARANSI",
-        },
-        {
-          name: "GARANSI",
-          align: "left",
-          label: "GARANSI",
-          field: "GARANSI",
-        },
-        {
           name: "CREATED_AT",
           align: "left",
           label: "Tanggal",
@@ -1042,168 +798,160 @@ export default {
     };
   },
   created() {
-    this.getBarang();
+    this.getData();
     this.getListKategori();
   },
   methods: {
-    editData(ID) {
-      this.editDialog = true;
-      this.ID = ID.ID_BARANG;
-      this.GUID = ID.GUID;
-      this.form.NAMA = ID.NAMA;
-      this.form.IMAGE1 = ID.IMAGE.IMAGE1;
-      this.form.IMAGE2 = ID.IMAGE.IMAGE2;
-      this.form.IMAGE3 = ID.IMAGE.IMAGE3;
-      this.form.IMAGE4 = ID.IMAGE.IMAGE4;
-      this.form.KATEGORI = ID.KATEGORI;
-      this.form.SATUAN = ID.SATUAN;
-      this.form.MODAL = ID.MODAL;
-      this.form.JUAL = ID.JUAL;
-      this.form.STOK = ID.STOK;
-      this.form.JENIS_PENJUALAN = ID.JENIS_PENJUALAN;
-      this.form.JENIS_GARANSI = ID.GARANSI.JENIS;
-      this.form.GARANSI = ID.GARANSI.NAMA;
-      this.form.BERAT = ID.UKURAN.BERAT;
-      this.form.PANJANG = ID.UKURAN.PANJANG;
-      this.form.LEBAR = ID.UKURAN.LEBAR;
-      this.form.TINGGI = ID.UKURAN.TINGGI;
-      this.form.DIKIRIM = ID.DIKIRIM;
-      this.form.DESKRIPSI = ID.DESKRIPSI;
-    },
-    resetDialog() {
-      this.form.NAMA = null;
-      this.form.IMAGE1 = null;
-      this.form.IMAGE2 = null;
-      this.form.IMAGE3 = null;
-      this.form.IMAGE4 = null;
-      this.form.KATEGORI = null;
-      this.form.SATUAN = null;
-      this.form.MODAL = null;
-      this.form.JUAL = null;
-      this.form.STOK = null;
-      this.form.JENIS_PENJUALAN = null;
-      this.form.JENIS_GARANSI = null;
-      this.form.GARANSI = null;
-      this.form.BERAT = null;
-      this.form.PANJANG = null;
-      this.form.LEBAR = null;
-      this.form.TINGGI = null;
-      this.form.DIKIRIM = null;
-      this.form.DESKRIPSI = null;
-    },
-    reset() {
-      this.editDialog = false;
-      this.editData = false;
-    },
     generateRandomId(length) {
       const randomStr = Math.random().toString(36).substr(2, length);
       return randomStr;
     },
+    openDialog(editMode, data) {
+      this.editMode = editMode;
+      this.dialog = true;
+      if (editMode) {
+        this.form = data;
+        this.idActive = data.GUID;
+
+        // this.form.ID = ID.ID_BARANG;
+        // this.form.NAMA = ID.NAMA;
+        // this.form.IMAGE1 = ID.IMAGE.IMAGE1;
+        // this.form.IMAGE2 = ID.IMAGE.IMAGE2;
+        // this.form.IMAGE3 = ID.IMAGE.IMAGE3;
+        // this.form.IMAGE4 = ID.IMAGE.IMAGE4;
+        // this.form.KATEGORI = ID.KATEGORI;
+        // this.form.SATUAN = ID.SATUAN;
+        // this.form.MODAL = ID.MODAL;
+        // this.form.JUAL = ID.JUAL;
+        // this.form.STOK = ID.STOK;
+        // this.form.JENIS_PENJUALAN = ID.JENIS_PENJUALAN;
+        // this.form.JENIS_GARANSI = ID.GARANSI.JENIS;
+        // this.form.GARANSI = ID.GARANSI.NAMA;
+        // this.form.BERAT = ID.UKURAN.BERAT;
+        // this.form.PANJANG = ID.UKURAN.PANJANG;
+        // this.form.LEBAR = ID.UKURAN.LEBAR;
+        // this.form.TINGGI = ID.UKURAN.TINGGI;
+        // this.form.DIKIRIM = ID.DIKIRIM;
+        // this.form.DESKRIPSI = ID.DESKRIPSI;
+        // this.idActive = ID.GUID;
+      } else {
+        // console.log("aaa");
+        console.log(this.form);
+        // this.form = null;
+        // this.idActive = null;
+        // this.form.NAMA = null;
+        // this.form.IMAGE1 = null;
+        // this.form.IMAGE2 = null;
+        // this.form.IMAGE3 = null;
+        // this.form.IMAGE4 = null;
+        // this.form.KATEGORI = null;
+        // this.form.SATUAN = null;
+        // this.form.MODAL = null;
+        // this.form.JUAL = null;
+        // this.form.STOK = null;
+        // this.form.JENIS_PENJUALAN = null;
+        // this.form.JENIS_GARANSI = null;
+        // this.form.GARANSI = null;
+        // this.form.BERAT = null;
+        // this.form.PANJANG = null;
+        // this.form.LEBAR = null;
+        // this.form.TINGGI = null;
+        // this.form.DIKIRIM = null;
+        // this.form.DESKRIPSI = null;
+        // this.idActive = null;
+      }
+    },
+    resetDialog() {
+      this.editMode = false;
+      this.dialog = false;
+    },
+    resetForm() {
+      this.form = null;
+    },
     onSubmit() {
-      this.$q.loading.show();
-      const formData = new FormData();
-      formData.append("ID_BARANG", this.generateRandomId(5));
-      formData.append("NAMA", this.form.NAMA);
-      // formData.append("IMAGE1", this.form.IMAGE1);
-      // formData.append("IMAGE2", this.form.IMAGE2);
-      // formData.append("IMAGE3", this.form.IMAGE3);
-      // formData.append("IMAGE4", this.form.IMAGE4);
-      formData.append("IMAGE1", this.form.IMAGE1);
-      formData.append("IMAGE2", this.form.IMAGE2);
-      formData.append("IMAGE3", this.form.IMAGE3);
-      formData.append("IMAGE4", this.form.IMAGE4);
-      formData.append(
-        "KATEGORI",
-        this.form.KATEGORI != null ? this.form.KATEGORI.NAMA : null
-      );
-      console.log(JSON.parse(JSON.stringify(formData)));
-      formData.append("SATUAN", this.form.SATUAN.NAMA);
-      formData.append("MODAL", this.form.MODAL);
-      formData.append("JUAL", this.form.JUAL);
-      formData.append("STOK", this.form.STOK);
-      formData.append("JENIS_PENJUALAN", this.form.JENIS_PENJUALAN);
-      formData.append("JENIS_GARANSI", this.form.JENIS_GARANSI.NAMA);
-      formData.append("GARANSI", this.form.GARANSI);
-      formData.append("BERAT", this.form.BERAT);
-      formData.append("PANJANG", this.form.PANJANG);
-      formData.append("LEBAR", this.form.LEBAR);
-      formData.append("TINGGI", this.form.TINGGI);
-      formData.append("DIKIRIM", this.form.DIKIRIM);
-      formData.append("DESKRIPSI", this.form.DESKRIPSI);
-      this.$axios
-        .post("produk/create", formData)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          console.log(response);
-          if (!this.$parseResponse(response.data)) {
-            this.getBarang();
-          }
-        })
-        .catch(() => this.$commonErrorNotif());
+      if (this.editMode) {
+        this.$q.loading.show();
+        const formData = new FormData();
+        formData.append("ID_BARANG", this.generateRandomId(5));
+        formData.append("NAMA", this.form.NAMA);
+        formData.append("IMAGE1", this.form.IMAGE.IMAGE1);
+        formData.append("IMAGE2", this.form.IMAGE.IMAGE2);
+        formData.append("IMAGE3", this.form.IMAGE.IMAGE3);
+        formData.append("IMAGE4", this.form.IMAGE.IMAGE4);
+        formData.append("KATEGORI", this.form.KATEGORI);
+        formData.append("SATUAN", this.form.SATUAN);
+        formData.append("MODAL", this.form.MODAL);
+        formData.append("JUAL", this.form.JUAL);
+        formData.append("STOK", this.form.STOK);
+        formData.append("JENIS_PENJUALAN", this.form.JENIS_PENJUALAN);
+        formData.append("JENIS_GARANSI", this.form.GARANSI.JENIS);
+        formData.append("GARANSI", this.form.GARANSI.NAMA);
+        formData.append("BERAT", this.form.UKURAN.BERAT);
+        formData.append("PANJANG", this.form.UKURAN.PANJANG);
+        formData.append("LEBAR", this.form.UKURAN.LEBAR);
+        formData.append("TINGGI", this.form.UKURAN.TINGGI);
+        formData.append("DIKIRIM", this.form.DIKIRIM);
+        formData.append("DESKRIPSI", this.form.DESKRIPSI);
+        this.$axios
+          .put(`produk/update/${this.idActive}`, formData)
+          .finally(() => this.$q.loading.hide())
+          .then((response) => {
+            console.log(response);
+            if (!this.$parseResponse(response.data)) {
+            }
+            this.getData();
+            this.resetDialog();
+            this.resetForm();
+          })
+          .catch(() => this.$commonErrorNotif());
+      } else {
+        this.$q.loading.show();
+        const formData = new FormData();
+        formData.append("ID_BARANG", this.generateRandomId(5));
+        formData.append("NAMA", this.form.NAMA);
+        formData.append("IMAGE1", this.form.IMAGE.IMAGE1);
+        formData.append("IMAGE2", this.form.IMAGE.IMAGE2);
+        formData.append("IMAGE3", this.form.IMAGE.IMAGE3);
+        formData.append("IMAGE4", this.form.IMAGE.IMAGE4);
+        formData.append(
+          "KATEGORI",
+          this.form.KATEGORI != null ? this.form.KATEGORI.NAMA : null
+        );
+        formData.append("SATUAN", this.form.SATUAN.NAMA);
+        formData.append("MODAL", this.form.MODAL);
+        formData.append("JUAL", this.form.JUAL);
+        formData.append("STOK", this.form.STOK);
+        formData.append("JENIS_PENJUALAN", this.form.JENIS_PENJUALAN);
+        formData.append("JENIS_GARANSI", this.form.GARANSI.JENIS);
+        formData.append("GARANSI", this.form.GARANSI.NAMA);
+        formData.append("BERAT", this.form.UKURAN.BERAT);
+        formData.append("PANJANG", this.form.UKURAN.PANJANG);
+        formData.append("LEBAR", this.form.UKURAN.LEBAR);
+        formData.append("TINGGI", this.form.UKURAN.TINGGI);
+        formData.append("DIKIRIM", this.form.DIKIRIM);
+        formData.append("DESKRIPSI", this.form.DESKRIPSI);
+        this.form.ID_BARANG = this.generateRandomId(5);
+        this.$axios
+          .post("produk/create", formData)
+          .finally(() => this.$q.loading.hide())
+          .then((response) => {
+            if (!this.$parseResponse(response.data)) {
+            }
+            this.dialog = false;
+            this.getData();
+          })
+          .catch(() => this.$commonErrorNotif());
+      }
     },
-    onEdit(GUID) {
-      console.log(GUID);
-      const formData = new FormData();
-      formData.append("ID_BARANG", this.generateRandomId(5));
-      formData.append("NAMA", this.form.NAMA);
-      formData.append("IMAGE1", this.form.IMAGE1);
-      formData.append("IMAGE2", this.form.IMAGE2);
-      formData.append("IMAGE3", this.form.IMAGE3);
-      formData.append("IMAGE4", this.form.IMAGE4);
-      formData.append("KATEGORI", this.form.KATEGORI);
-      formData.append("SATUAN", this.form.SATUAN);
-      formData.append("MODAL", this.form.MODAL);
-      formData.append("JUAL", this.form.JUAL);
-      formData.append("STOK", this.form.STOK);
-      formData.append("JENIS_PENJUALAN", this.form.JENIS_PENJUALAN);
-      formData.append("JENIS_GARANSI", this.form.JENIS_GARANSI);
-      formData.append("GARANSI", this.form.GARANSI);
-      formData.append("BERAT", this.form.BERAT);
-      formData.append("PANJANG", this.form.PANJANG);
-      formData.append("LEBAR", this.form.LEBAR);
-      formData.append("TINGGI", this.form.TINGGI);
-      formData.append("DIKIRIM", this.form.DIKIRIM);
-      formData.append("DESKRIPSI", this.form.DESKRIPSI);
-      console.log("ini form " + formData);
-      this.$q.loading.show();
-      this.$axios
-        .put(`produk/update/${this.GUID}`, formData)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          console.log(response);
-          if (!this.$parseResponse(response.data)) {
-            this.editDialog = false;
-            this.getBarang();
-          }
-          this.resetDialog();
-        })
-        .catch(() => this.$commonErrorNotif());
-    },
-    getBarang: async function () {
+    getData: async function () {
       this.$q.loading.show();
       await this.$axios
-        .get(`/produk/`)
+        .get(`/produk`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
           if (!this.$parseResponse(response.data)) {
             this.rows = response.data.data;
-          }
-        })
-        .catch(() => this.$commonErrorNotif());
-    },
-    deleteGUID(GUID) {
-      this.deleteDialog = true;
-      this.IDSatuan = GUID;
-    },
-    deleteData(IDSatuan) {
-      this.$q.loading.show();
-      this.$axios
-        .delete(`produk/${IDSatuan}`)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          if (!this.$parseResponse(response.data)) {
-            this.getBarang();
           }
         })
         .catch(() => this.$commonErrorNotif());
@@ -1219,7 +967,6 @@ export default {
           }
         })
         .catch(() => this.$commonErrorNotif());
-
       this.$q.loading.show();
       await this.$axios
         .get(`/satuan`)
@@ -1230,16 +977,58 @@ export default {
           }
         })
         .catch(() => this.$commonErrorNotif());
-
       this.$q.loading.show();
       await this.$axios
         .get(`/garansi`)
         .finally(() => this.$q.loading.hide())
         .then((response) => {
-          console.log(response);
           if (!this.$parseResponse(response.data)) {
             this.options.optionsGaransi = response.data.data;
           }
+        })
+        .catch(() => this.$commonErrorNotif());
+    },
+    detail(DATA) {
+      this.detailDialog = true;
+      this.form = DATA;
+      // this.ID_BARANG = ID.ID_BARANG;
+      // this.NAMA = ID.NAMA;
+      // this.IMAGE1 = ID.IMAGE.IMAGE1;
+      // this.IMAGE2 = ID.IMAGE.IMAGE2;
+      // this.IMAGE3 = ID.IMAGE.IMAGE3;
+      // this.IMAGE4 = ID.IMAGE.IMAGE4;
+      // this.KATEGORI = ID.KATEGORI;
+      // this.SATUAN = ID.SATUAN;
+      // this.MODAL = ID.MODAL;
+      // this.JUAL = ID.JUAL;
+      // this.STOK = ID.STOK;
+      // this.JENIS_PENJUALAN = ID.JENIS_PENJUALAN;
+      // this.JENIS_GARANSI = ID.GARANSI.JENIS;
+      // this.GARANSI = ID.GARANSI.NAMA;
+      // this.BERAT = ID.BERAT;
+      // this.PANJANG = ID.UKURAN.PANJANG;
+      // this.LEBAR = ID.UKURAN.LEBAR;
+      // this.TINGGI = ID.UKURAN.TINGGI;
+      // this.DIKIRIM = ID.DIKIRIM;
+      // this.DESKRIPSI = ID.DESKRIPSI;
+      // this.TANGGAL_DAFTAR = ID.CREATED_AT;
+
+      // this.resetDialog();
+      // this.resetForm();
+    },
+    deleteGUID(GUID) {
+      this.deleteDialog = true;
+      this.idbarang = GUID;
+    },
+    deleteData() {
+      this.$q.loading.show();
+      this.$axios
+        .delete(`produk/${this.idbarang}`)
+        .finally(() => this.$q.loading.hide())
+        .then((response) => {
+          if (!this.$parseResponse(response.data)) {
+          }
+          this.getData();
         })
         .catch(() => this.$commonErrorNotif());
     },

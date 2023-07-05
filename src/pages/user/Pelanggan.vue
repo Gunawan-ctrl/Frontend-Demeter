@@ -127,8 +127,6 @@
 
     <q-dialog v-model="detailDialog" position="bottom">
       <q-card style="width: 700px; max-width: 80vw">
-        <q-linear-progress :value="0.5" color="green" />
-
         <q-card-section class="items-center no-wrap">
           <div>
             <div class="text-weight-bold">DETAIL DATA PELANGGAN</div>
@@ -180,7 +178,9 @@
       <q-card style="width: 900px; max-width: 80vw">
         <q-form @submit="onSubmit()" class="q-gutter-md">
           <q-card-section>
-            <div class="text-h6 text-indigo">PENDAFTARAN PELANGGAN BARU</div>
+            <div class="text-h6 text-indigo">
+              PENDAFTARAN / UBAH PELANGGAN BARU
+            </div>
             <div class="text-caption">
               Pastikan melakukan pengecekan data sebelum mendaftarkan
             </div>
@@ -287,118 +287,6 @@
         </q-form>
       </q-card>
     </q-dialog>
-
-    <!-- <q-dialog v-model="editDialog">
-      <q-card style="width: 900px; max-width: 80vw">
-        <q-form @submit="onEdit()" class="q-gutter-md">
-          <q-card-section>
-            <div class="text-h6 text-indigo">UDAB DATA PELANGGAN</div>
-            <div class="text-caption">
-              Pastikan melakukan pengecekan data sebelum perubahan
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            <div class="text-caption q-pa-sm text-weight-bold flex-center">
-              <q-avatar
-                size="sm"
-                color="primary"
-                text-color="white"
-                class="q-mr-md"
-                icon="admin_panel_settings"
-              />Data Pokok
-            </div>
-
-            <div class="row items-start">
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.NAMA"
-                class="text-white col-4 q-pa-sm"
-                label="Nama Lengkap"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="account_circle" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                type="number"
-                standout="bg-positive text-white"
-                v-model="form.TELEPON"
-                class="text-white col-4 q-pa-sm"
-                label="No. Telepon"
-                mask="#############"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="call" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.EMAIL"
-                class="text-white col-4 q-pa-sm"
-                label="Email"
-                type="email"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="mail_outline" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.ALAMAT"
-                class="text-white col-4 q-pa-sm"
-                label="Alamat Lengkap"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="person_pin" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.KECAMATAN"
-                class="text-white col-4 q-pa-sm"
-                label="Kecamatan"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.KABUPATEN"
-                class="text-white col-4 q-pa-sm"
-                label="Kabupaten / Kota"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-              <q-input
-                standout="bg-positive text-white"
-                v-model="form.PROVINSI"
-                class="text-white col-4 q-pa-sm"
-                label="Provinsi"
-                dense
-              >
-                <template v-slot:prepend>
-                  <q-icon name="map" class="q-pr-md" />
-                </template>
-              </q-input>
-            </div>
-          </q-card-section>
-
-          <q-card-actions align="right" class="bg-grey-3 text-indigo q-py-md">
-            <q-btn type="submit" label="Update Data" v-close-popup flat dense />
-          </q-card-actions>
-        </q-form>
-      </q-card>
-    </q-dialog> -->
 
     <q-dialog
       v-model="deleteDialog"
@@ -603,24 +491,6 @@ export default {
         })
         .catch(() => this.$commonErrorNotif());
     },
-
-    deleteGUID(GUID) {
-      this.deleteDialog = true;
-      this.idPelanggan = GUID;
-    },
-    deleteData(GUID) {
-      console.log(GUID);
-      this.$q.loading.show();
-      this.$axios
-        .delete(`pelanggan/${this.idPelanggan}`)
-        .finally(() => this.$q.loading.hide())
-        .then((response) => {
-          if (!this.$parseResponse(response.data)) {
-          }
-          this.getData();
-        })
-        .catch(() => this.$commonErrorNotif());
-    },
     detail(ID) {
       this.GUID = ID.GUID;
       this.detailDialog = true;
@@ -635,95 +505,22 @@ export default {
       this.alamat = ID.ALAMAT;
       this.provinsi = ID.PROVINSI;
     },
-
-    // FUNCTION DATA LAMA
-    // editData(ID) {
-    //   this.editDialog = true;
-    //   this.ID = ID.ID_PELANGGAN;
-    //   this.GUID = ID.GUID;
-    //   this.form.NAMA = ID.NAMA;
-    //   this.form.TELEPON = ID.TELEPON;
-    //   this.form.EMAIL = ID.EMAIL;
-    //   this.form.ALAMAT = ID.ALAMAT;
-    //   this.form.KECAMATAN = ID.KECAMATAN;
-    //   this.form.KABUPATEN = ID.KABUPATEN;
-    //   this.form.PROVINSI = ID.PROVINSI;
-    //   this.form.PROFIL = "-";
-    // },
-    // detail(ID) {
-    //   console.log(ID);
-    //   this.GUID = ID.GUID;
-    //   this.detailDialog = true;
-    //   this.idpelanggan = ID.ID_PELANGGAN;
-    //   this.nama = ID.NAMA;
-    //   this.profil = ID.PROFIL;
-    //   this.telepon = ID.TELEPON;
-    //   this.tanggaldaftar = ID.CREATED_AT;
-    //   this.email = ID.EMAIL;
-    //   this.kabupaten = ID.KABUPATEN;
-    //   this.alamat = ID.ALAMAT;
-    //   this.provinsi = ID.PROVINSI;
-    // },
-    // generateRandomId(length) {
-    //   const randomStr = Math.random().toString(36).substr(2, length);
-    //   return randomStr;
-    // },
-    // onSubmit() {
-    //   this.$q.loading.show();
-    //   this.form.ID_PENGGUNA = this.dataPengguna.user.ID;
-    //   this.form.ID_PELANGGAN = this.generateRandomId(5);
-    //   this.$axios
-    //     .post("pelanggan/create", this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPelanggan();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // onEdit() {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .put(`pelanggan/update/${this.GUID}`, this.form)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.editDialog = false;
-    //         this.getPelanggan();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // getPelanggan: async function () {
-    //   this.$q.loading.show();
-    //   await this.$axios
-    //     .get(`/pelanggan`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       console.log(response);
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.rows = response.data.data;
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
-    // deleteGUID(GUID) {
-    //   this.deleteDialog = true;
-    //   this.idpelanggan = GUID;
-    // },
-    // deleteData(idpelanggan) {
-    //   this.$q.loading.show();
-    //   this.$axios
-    //     .delete(`pelanggan/${idpelanggan}`)
-    //     .finally(() => this.$q.loading.hide())
-    //     .then((response) => {
-    //       if (!this.$parseResponse(response.data)) {
-    //         this.getPelanggan();
-    //       }
-    //     })
-    //     .catch(() => this.$commonErrorNotif());
-    // },
+    deleteGUID(GUID) {
+      this.deleteDialog = true;
+      this.idPelanggan = GUID;
+    },
+    deleteData() {
+      this.$q.loading.show();
+      this.$axios
+        .delete(`pelanggan/${this.idPelanggan}`)
+        .finally(() => this.$q.loading.hide())
+        .then((response) => {
+          if (!this.$parseResponse(response.data)) {
+          }
+          this.getData();
+        })
+        .catch(() => this.$commonErrorNotif());
+    },
   },
 };
 </script>
